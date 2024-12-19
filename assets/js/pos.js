@@ -45,8 +45,8 @@ let customerOrderList = [];
 let ownUserEdit = null;
 let totalPrice = 0;
 let orderTotal = 0;
-let auth_error = 'Incorrect username or password';
-let auth_empty = 'Please enter a username and password';
+let auth_error = 'Nome de usuário ou senha incorretos';
+let auth_empty = 'Por favor, insira um nome de usuário e senha';
 let holdOrderlocation = $("#randerHoldOrders");
 let customerOrderLocation = $("#randerCustomerOrders");
 let storage = new Store();
@@ -64,7 +64,8 @@ let by_status = 1;
 $(function () {
 
     function cb(start, end) {
-        $('#reportrange span').html(start.format('MMMM D, YYYY') + '  -  ' + end.format('MMMM D, YYYY'));
+        // $('#reportrange span').html(start.format('MMMM D, YYYY') + '  -  ' + end.format('MMMM D, YYYY'));
+		$('#reportrange span').html(start.format('DD/MM/YYYY HH:mm:ss') + '  -  ' + end.format('DD/MM/YYYY HH:mm:ss'));
     }
 
     $('#reportrange').daterangepicker({
@@ -77,13 +78,13 @@ $(function () {
         timePickerSeconds: true,
         // minDate: '',
         ranges: {
-            'Today': [moment().startOf('day'), moment()],
-            'Yesterday': [moment().subtract(1, 'days').startOf('day'), moment().subtract(1, 'days').endOf('day')],
-            'Last 7 Days': [moment().subtract(6, 'days').startOf('day'), moment().endOf('day')],
-            'Last 30 Days': [moment().subtract(29, 'days').startOf('day'), moment().endOf('day')],
-            'This Month': [moment().startOf('month'), moment().endOf('month')],
-            'This Month': [moment().startOf('month'), moment()],
-            'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+            'Hoje': [moment().startOf('day'), moment()],
+            'Ontem': [moment().subtract(1, 'days').startOf('day'), moment().subtract(1, 'days').endOf('day')],
+            'Ultimos 7 dias': [moment().subtract(6, 'days').startOf('day'), moment().endOf('day')],
+            'Ultimos 30 dias': [moment().subtract(29, 'days').startOf('day'), moment().endOf('day')],
+            'Esse Mes': [moment().startOf('month'), moment().endOf('month')],
+            'Esse Mes': [moment().startOf('month'), moment()],
+            'Ultimo mes': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
         }
     }, cb);
 
@@ -130,7 +131,7 @@ if (auth == undefined) {
 
     if (platform != undefined) {
 
-        if (platform.app == 'Network Point of Sale Terminal') {
+        if (platform.app == 'Terminal de Ponto de Venda em Rede') {
             api = 'http://' + platform.ip + ':' + port + '/api/';
             perms = true;
         }
@@ -210,7 +211,7 @@ if (auth == undefined) {
                 loadProductList();
 
                 $('#parent').text('');
-                $('#categories').html(`<button type="button" id="all" class="btn btn-categories btn-white waves-effect waves-light">All</button> `);
+                $('#categories').html(`<button type="button" id="all" class="btn btn-categories btn-white waves-effect waves-light">Todos</button> `);
 
                 data.forEach(item => {
 
@@ -261,7 +262,7 @@ if (auth == undefined) {
 
             $.get(api + 'customers/all', function (customers) {
 
-                $('#customer').html(`<option value="0" selected="selected">Walk in customer</option>`);
+                $('#customer').html(`<option value="0" selected="selected">Cliente sem cadastro</option>`);
 
                 customers.forEach(cust => {
 
@@ -286,8 +287,8 @@ if (auth == undefined) {
                 }
                 else {
                     Swal.fire(
-                        'Out of stock!',
-                        'This item is currently unavailable',
+                        'Sem estoque!',
+                        'Este item está atualmente indisponível',
                         'info'
                     );
                 }
@@ -332,16 +333,16 @@ if (auth == undefined) {
                     }
                     else if (data.quantity < 1) {
                         Swal.fire(
-                            'Out of stock!',
-                            'This item is currently unavailable',
+                            'Sem estoque!',
+                            'Este item está atualmente indisponível',
                             'info'
                         );
                     }
                     else {
 
                         Swal.fire(
-                            'Not Found!',
-                            '<b>' + $("#skuCode").val() + '</b> is not a valid barcode!',
+                            'Não encontrado!',
+                            '<b>' + $("#skuCode").val() + '</b> não é um código de barras válido!',
                             'warning'
                         );
 
@@ -533,8 +534,8 @@ if (auth == undefined) {
 
                 else {
                     Swal.fire(
-                        'No more stock!',
-                        'You have already added all the available stock.',
+                        'Sem estoque!',
+                        'Este item está atualmente indisponível',
                         'info'
                     );
                 }
@@ -567,13 +568,13 @@ if (auth == undefined) {
 
             if (cart.length > 0) {
                 Swal.fire({
-                    title: 'Are you sure?',
-                    text: "You are about to remove all items from the cart.",
+                    title: 'Tem certeza?',
+                    text: "Você está prestes a remover todos os itens do carrinho.",
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#3085d6',
                     cancelButtonColor: '#d33',
-                    confirmButtonText: 'Yes, clear it!'
+                    confirmButtonText: 'Sim, limpar!'
                 }).then((result) => {
 
                     if (result.value) {
@@ -583,8 +584,8 @@ if (auth == undefined) {
                         holdOrder = 0;
 
                         Swal.fire(
-                            'Cleared!',
-                            'All items have been removed.',
+                            'Limpo!',
+                            'Todos os itens foram removidos.',
                             'success'
                         )
                     }
@@ -600,7 +601,7 @@ if (auth == undefined) {
             } else {
                 Swal.fire(
                     'Oops!',
-                    'There is nothing to pay!',
+                    'Não há nada para pagar!',
                     'warning'
                 );
             }
@@ -616,7 +617,7 @@ if (auth == undefined) {
             } else {
                 Swal.fire(
                     'Oops!',
-                    'There is nothing to hold!',
+                    'Não há nada para reservar!',
                     'warning'
                 );
             }
@@ -643,7 +644,7 @@ if (auth == undefined) {
 
             let discount = $("#inputDiscount").val();
             let customer = JSON.parse($("#customer").val());
-            let date = moment(currentTime).format("YYYY-MM-DD HH:mm:ss");
+            let date = moment(currentTime).format("DD/MM/YYYY HH:mm:ss");
             let paid = $("#payment").val() == "" ? "" : parseFloat($("#payment").val()).toFixed(2);
             let change = $("#change").text() == "" ? "" : parseFloat($("#change").text()).toFixed(2);
             let refNumber = $("#refNumber").val();
@@ -699,8 +700,8 @@ if (auth == undefined) {
 
                 if ($("#customer").val() == 0 && $("#refNumber").val() == "") {
                     Swal.fire(
-                        'Reference Required!',
-                        'You either need to select a customer <br> or enter a reference!',
+                        'Referência necessária!',
+                        'Você precisa selecionar um cliente ou inserir uma referência!',
                         'warning'
                     )
 
@@ -735,11 +736,11 @@ if (auth == undefined) {
         <hr>
         <left>
             <p>
-            Order No : ${orderNumber} <br>
-            Ref No : ${refNumber == "" ? orderNumber : refNumber} <br>
-            Customer : ${customer == 0 ? 'Walk in customer' : customer.name} <br>
-            Cashier : ${user.fullname} <br>
-            Date : ${date}<br>
+            Pedido No : ${orderNumber} <br>
+            Referencia No : ${refNumber == "" ? orderNumber : refNumber} <br>
+            Cliente : ${customer == 0 ? 'Walk in customer' : customer.name} <br>
+            Caixa : ${user.fullname} <br>
+            Data : ${date}<br>
             </p>
 
         </left>
@@ -748,8 +749,8 @@ if (auth == undefined) {
             <thead style="text-align: left;">
             <tr>
                 <th>Item</th>
-                <th>Qty</th>
-                <th>Price</th>
+                <th>Qtd</th>
+                <th>Preço</th>
             </tr>
             </thead>
             <tbody>
@@ -761,7 +762,7 @@ if (auth == undefined) {
                 <td><b>${settings.symbol}${subTotal.toFixed(2)}</b></td>
             </tr>
             <tr>
-                <td>Discount</td>
+                <td>Desconto</td>
                 <td>:</td>
                 <td>${discount > 0 ? settings.symbol + parseFloat(discount).toFixed(2) : ''}</td>
             </tr>
@@ -853,7 +854,7 @@ if (auth == undefined) {
                 }, error: function (data) {
                     $(".loading").hide();
                     $("#dueModal").modal('toggle');
-                    swal("Something went wrong!", 'Please refresh this page and try again');
+                    swal("Algo deu errado!", 'Por favor, atualize esta página e tente novamente');
 
                 }
             });
@@ -901,7 +902,7 @@ if (auth == undefined) {
                                     $('<span>', { text: order.items.length }),
                                     $('<br>'),
                                     $('<b>', { text: 'Customer :' }),
-                                    $('<span>', { text: order.customer != 0 ? order.customer.name : 'Walk in customer', class: 'customer_name' })
+                                    $('<span>', { text: order.customer != 0 ? order.customer.name : 'Cliente sem cadastro', class: 'customer_name' })
                                 ),
                                 $('<button>', { class: 'btn btn-danger del', onclick: '$(this).deleteOrder(' + index + ',' + orderType + ')' }).append(
                                     $('<i>', { class: 'fa fa-trash' })
@@ -1000,13 +1001,13 @@ if (auth == undefined) {
             }
 
             Swal.fire({
-                title: "Delete order?",
-                text: "This will delete the order. Are you sure you want to delete!",
+                title: 'Tem certeza?',
+                text: 'Isso excluirá o pedido. Você tem certeza de que deseja excluir!',
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, delete it!'
+                confirmeButtonText: 'Sim, exclua!'
             }).then((result) => {
 
                 if (result.value) {
@@ -1023,8 +1024,8 @@ if (auth == undefined) {
                             $(this).getCustomerOrders();
 
                             Swal.fire(
-                                'Deleted!',
-                                'You have deleted the order!',
+                                'Deletado!',
+                                'Você excluiu o pedido!',
                                 'success'
                             )
 
@@ -1071,7 +1072,7 @@ if (auth == undefined) {
                 processData: false,
                 success: function (data) {
                     $("#newCustomer").modal('hide');
-                    Swal.fire("Customer added!", "Customer added successfully!", "success");
+                    Swal.fire('Cliente adicionado!', 'Cliente adicionado com sucesso!', 'success');
                     $("#customer option:selected").removeAttr('selected');
                     $('#customer').append(
                         $('<option>', { text: custData.name, value: `{"id": ${custData._id}, "name": ${custData.name}}`, selected: 'selected' })
@@ -1081,7 +1082,7 @@ if (auth == undefined) {
 
                 }, error: function (data) {
                     $("#newCustomer").modal('hide');
-                    Swal.fire('Error', 'Something went wrong please try again', 'error')
+                    Swal.fire('Erro', 'Algo deu errado, por favor, tente novamente', 'error');
                 }
             })
         })
@@ -1099,8 +1100,8 @@ if (auth == undefined) {
         $("#confirmPayment").on('click', function () {
             if ($('#payment').val() == "") {
                 Swal.fire(
-                    'Nope!',
-                    'Please enter the amount that was paid!',
+                    'Oops!',
+                    'Por favor, insira o valor pago!',
                     'warning'
                 );
             }
@@ -1165,14 +1166,14 @@ if (auth == undefined) {
 
                     loadProducts();
                     Swal.fire({
-                        title: 'Product Saved',
-                        text: "Select an option below to continue.",
+                        title: 'Produto salvo',
+                        text: 'Selecione uma opção abaixo para continuar.',
                         icon: 'success',
                         showCancelButton: true,
                         confirmButtonColor: '#3085d6',
                         cancelButtonColor: '#d33',
-                        confirmButtonText: 'Add another',
-                        cancelButtonText: 'Close'
+                        confirmButtonText: 'Adicionar outro',
+                        cancelButtonText: 'Fechar'
                     }).then((result) => {
 
                         if (!result.value) {
@@ -1207,14 +1208,14 @@ if (auth == undefined) {
                     loadCategories();
                     loadProducts();
                     Swal.fire({
-                        title: 'Category Saved',
-                        text: "Select an option below to continue.",
+                        title: 'Categoria salva',
+                        text: 'Selecione uma opção abaixo para continuar.',
                         icon: 'success',
                         showCancelButton: true,
                         confirmButtonColor: '#3085d6',
                         cancelButtonColor: '#d33',
-                        confirmButtonText: 'Add another',
-                        cancelButtonText: 'Close'
+                        confirmeButtonText: 'Adicionar outro',
+                        cancelButtonText: 'Fechar'
                     }).then((result) => {
 
                         if (!result.value) {
@@ -1328,13 +1329,13 @@ if (auth == undefined) {
 
         $.fn.deleteProduct = function (id) {
             Swal.fire({
-                title: 'Are you sure?',
-                text: "You are about to delete this product.",
+                title: 'Tem certeza?',
+                text: 'Você está prestes a excluir este produto.',
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, delete it!'
+                confirmeButtonText: 'Sim, exclua!'
             }).then((result) => {
 
                 if (result.value) {
@@ -1345,8 +1346,8 @@ if (auth == undefined) {
                         success: function (result) {
                             loadProducts();
                             Swal.fire(
-                                'Done!',
-                                'Product deleted',
+                                'Feito!',
+                                'Produto excluído',
                                 'success'
                             );
 
@@ -1359,13 +1360,13 @@ if (auth == undefined) {
 
         $.fn.deleteUser = function (id) {
             Swal.fire({
-                title: 'Are you sure?',
-                text: "You are about to delete this user.",
+                title: 'Tem certeza?',
+                text: 'Você está prestes a excluir este usuário.',
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, delete!'
+                confirmButtonText: 'Sim, exclua!'
             }).then((result) => {
 
                 if (result.value) {
@@ -1376,8 +1377,8 @@ if (auth == undefined) {
                         success: function (result) {
                             loadUserList();
                             Swal.fire(
-                                'Done!',
-                                'User deleted',
+                                'Feito!',
+                                'Usuário excluído',
                                 'success'
                             );
 
@@ -1390,13 +1391,13 @@ if (auth == undefined) {
 
         $.fn.deleteCategory = function (id) {
             Swal.fire({
-                title: 'Are you sure?',
-                text: "You are about to delete this category.",
+				title: 'Tem certeza?',
+				text: 'Você está prestes a excluir esta categoria.',
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, delete it!'
+				confirmButtonText: 'Sim, exclua!'
             }).then((result) => {
 
                 if (result.value) {
@@ -1407,8 +1408,8 @@ if (auth == undefined) {
                         success: function (result) {
                             loadCategories();
                             Swal.fire(
-                                'Done!',
-                                'Category deleted',
+								'Feito!',
+								'Categoria excluída',
                                 'success'
                             );
 
@@ -1594,13 +1595,13 @@ if (auth == undefined) {
         $('#log-out').click(function () {
 
             Swal.fire({
-                title: 'Are you sure?',
-                text: "You are about to log out.",
+				title: 'Tem certeza?',
+				text: 'Você está prestes a sair.',
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#d33',
                 cancelButtonColor: '#3085d6',
-                confirmButtonText: 'Logout'
+				confirmButtonText: 'Sair'
             }).then((result) => {
 
                 if (result.value) {
@@ -1635,7 +1636,7 @@ if (auth == undefined) {
             if (formData.percentage != "" && !$.isNumeric(formData.percentage)) {
                 Swal.fire(
                     'Oops!',
-                    'Please make sure the tax value is a number',
+					'Por favor, certifique-se de que o valor do imposto é um número',
                     'warning'
                 );
             }
@@ -1671,7 +1672,7 @@ if (auth == undefined) {
             if (formData.till == 0 || formData.till == 1) {
                 Swal.fire(
                     'Oops!',
-                    'Please enter a number greater than 1.',
+					'Por favor, insira um número maior que 1.',
                     'warning'
                 );
             }
@@ -1684,7 +1685,7 @@ if (auth == undefined) {
                 else {
                     Swal.fire(
                         'Oops!',
-                        'Till number must be a number!',
+						'O número do caixa deve ser um número!',
                         'warning'
                     );
                 }
@@ -1706,7 +1707,7 @@ if (auth == undefined) {
                     if (formData.password != formData.pass) {
                         Swal.fire(
                             'Oops!',
-                            'Passwords do not match!',
+							'As senhas não correspondem!',
                             'warning'
                         );
                     }
@@ -1717,8 +1718,8 @@ if (auth == undefined) {
                     if (formData.password != formData.pass) {
                         Swal.fire(
                             'Oops!',
-                            'Passwords do not match!',
-                            'warning'
+							'As senhas não correspondem!',
+							'warning'
                         );
                     }
                 }
@@ -1748,7 +1749,7 @@ if (auth == undefined) {
                             $('#Users').modal('show');
                             Swal.fire(
                                 'Ok!',
-                                'User details saved!',
+								'Detalhes do usuário salvos!',
                                 'success'
                             );
                         }
@@ -1767,7 +1768,7 @@ if (auth == undefined) {
 
 
         $('#app').change(function () {
-            if ($(this).find('option:selected').text() == 'Network Point of Sale Terminal') {
+            if ($(this).find('option:selected').text() == 'Terminal de Ponto de Venda em Rede') {
                 $('#net_settings_form').show(500);
                 $('#settings_form').hide(500);
                 macaddress.one(function (err, mac) {
@@ -1800,7 +1801,7 @@ if (auth == undefined) {
 
         $('#add-user').click(function () {
 
-            if (platform.app != 'Network Point of Sale Terminal') {
+            if (platform.app != 'Terminal de Ponto de Venda em Rede') {
                 $('.perms').show();
             }
 
@@ -1813,7 +1814,7 @@ if (auth == undefined) {
 
         $('#settings').click(function () {
 
-            if (platform.app == 'Network Point of Sale Terminal') {
+            if (platform.app == 'Terminal de Ponto de Venda em Rede') {
                 $('#net_settings_form').show(500);
                 $('#settings_form').hide(500);
 
@@ -1973,11 +1974,11 @@ function loadTransactions() {
                 counter++;
                 transaction_list += `<tr>
                                 <td>${trans.order}</td>
-                                <td class="nobr">${moment(trans.date).format('YYYY MMM DD hh:mm:ss')}</td>
+                                <td class="nobr">${moment(trans.date).format('DD MMM YYYY hh:mm A')}</td>
                                 <td>${settings.symbol + trans.total}</td>
                                 <td>${trans.paid == "" ? "" : settings.symbol + trans.paid}</td>
                                 <td>${trans.change ? settings.symbol + Math.abs(trans.change).toFixed(2) : ''}</td>
-                                <td>${trans.paid == "" ? "" : trans.payment_type == 0 ? "Cash" : 'Card'}</td>
+                                <td>${trans.paid == "" ? "" : trans.payment_type == 0 ? "Dinheiro" : 'Cartão'}</td>
                                 <td>${trans.till}</td>
                                 <td>${trans.user}</td>
                                 <td>${trans.paid == "" ? '<button class="btn btn-dark"><i class="fa fa-search-plus"></i></button>' : '<button onClick="$(this).viewTransaction(' + index + ')" class="btn btn-info"><i class="fa fa-search-plus"></i></button></td>'}</tr>
@@ -2103,7 +2104,7 @@ function loadSoldProducts() {
 function userFilter(users) {
 
     $('#users').empty();
-    $('#users').append(`<option value="0">All</option>`);
+    $('#users').append(`<option value="0">Todos</option>`);
 
     users.forEach(user => {
         let u = allUsers.filter(function (usr) {
@@ -2119,7 +2120,7 @@ function userFilter(users) {
 function tillFilter(tills) {
 
     $('#tills').empty();
-    $('#tills').append(`<option value="0">All</option>`);
+    $('#tills').append(`<option value="0">Todos</option>`);
     tills.forEach(till => {
         $('#tills').append(`<option value="${till}">${till}</option>`);
     });
@@ -2132,7 +2133,7 @@ $.fn.viewTransaction = function (index) {
     transaction_index = index;
 
     let discount = allTransactions[index].discount;
-    let customer = allTransactions[index].customer == 0 ? 'Walk in Customer' : allTransactions[index].customer.username;
+    let customer = allTransactions[index].customer == 0 ? 'Cliente Avulso' : allTransactions[index].customer.username;
     let refNumber = allTransactions[index].ref_number != "" ? allTransactions[index].ref_number : allTransactions[index].order;
     let orderNumber = allTransactions[index].order;
     let type = "";
@@ -2145,46 +2146,40 @@ $.fn.viewTransaction = function (index) {
 
     });
 
-
     switch (allTransactions[index].payment_type) {
 
-        case 2: type = "Card";
+        case 2: type = "Cartão";
             break;
 
-        default: type = "Cash";
+        default: type = "Dinheiro";
 
     }
 
-
     if (allTransactions[index].paid != "") {
         payment = `<tr>
-                    <td>Paid</td>
+                    <td>Pago</td>
                     <td>:</td>
                     <td>${settings.symbol + allTransactions[index].paid}</td>
                 </tr>
                 <tr>
-                    <td>Change</td>
+                    <td>Troco</td>
                     <td>:</td>
                     <td>${settings.symbol + Math.abs(allTransactions[index].change).toFixed(2)}</td>
                 </tr>
                 <tr>
-                    <td>Method</td>
+                    <td>Método</td>
                     <td>:</td>
                     <td>${type}</td>
                 </tr>`
     }
 
-
-
     if (settings.charge_tax) {
         tax_row = `<tr>
-                <td>Vat(${settings.percentage})% </td>
+                <td>Imposto (${settings.percentage})% </td>
                 <td>:</td>
                 <td>${settings.symbol}${parseFloat(allTransactions[index].tax).toFixed(2)}</td>
             </tr>`;
     }
-
-
 
     receipt = `<div style="font-size: 10px;">                            
         <p style="text-align: center;">
@@ -2193,16 +2188,16 @@ $.fn.viewTransaction = function (index) {
             ${settings.address_one} <br>
             ${settings.address_two} <br>
             ${settings.contact != '' ? 'Tel: ' + settings.contact + '<br>' : ''} 
-            ${settings.tax != '' ? 'Vat No: ' + settings.tax + '<br>' : ''} 
+            ${settings.tax != '' ? 'CNPJ: ' + settings.tax + '<br>' : ''} 
     </p>
     <hr>
     <left>
         <p>
-        Invoice : ${orderNumber} <br>
+        Fatura : ${orderNumber} <br>
         Ref No : ${refNumber} <br>
-        Customer : ${allTransactions[index].customer == 0 ? 'Walk in Customer' : allTransactions[index].customer.name} <br>
-        Cashier : ${allTransactions[index].user} <br>
-        Date : ${moment(allTransactions[index].date).format('DD MMM YYYY HH:mm:ss')}<br>
+        Cliente : ${allTransactions[index].customer == 0 ? 'Cliente Avulso' : allTransactions[index].customer.name} <br>
+        Caixa : ${allTransactions[index].user} <br>
+        Data : ${moment(allTransactions[index].date).format('DD MMM YYYY HH:mm:ss')}<br>
         </p>
 
     </left>
@@ -2211,20 +2206,20 @@ $.fn.viewTransaction = function (index) {
         <thead style="text-align: left;">
         <tr>
             <th>Item</th>
-            <th>Qty</th>
-            <th>Price</th>
+            <th>Qtd</th>
+            <th>Preço</th>
         </tr>
         </thead>
         <tbody>
         ${items}                
- 
+
         <tr>                        
             <td><b>Subtotal</b></td>
             <td>:</td>
             <td><b>${settings.symbol}${allTransactions[index].subtotal}</b></td>
         </tr>
         <tr>
-            <td>Discount</td>
+            <td>Desconto</td>
             <td>:</td>
             <td>${discount > 0 ? settings.symbol + parseFloat(allTransactions[index].discount).toFixed(2) : ''}</td>
         </tr>
@@ -2255,7 +2250,6 @@ $.fn.viewTransaction = function (index) {
     $('#orderModal').modal('show');
 
 }
-
 
 $('#status').change(function () {
     by_status = $(this).find('option:selected').val();
@@ -2291,9 +2285,9 @@ $('#reportrange').on('apply.daterangepicker', function (ev, picker) {
 
 function authenticate() {
     $('#loading').append(
-        `<div id="load"><form id="account"><div class="form-group"><input type="text" placeholder="Username" name="username" class="form-control"></div>
-        <div class="form-group"><input type="password" placeholder="Password" name="password" class="form-control"></div>
-        <div class="form-group"><input type="submit" class="btn btn-block btn-default" value="Login"></div></form>`
+        `<div id="load"><form id="account"><div class="form-group"><input type="text" placeholder="Usuário" name="username" class="form-control"></div>
+        <div class="form-group"><input type="password" placeholder="Senha" name="password" class="form-control"></div>
+        <div class="form-group"><input type="submit" class="btn btn-block btn-default" value="Entrar"></div></form>`
     );
 }
 
@@ -2305,7 +2299,7 @@ $('body').on("submit", "#account", function (e) {
     if (formData.username == "" || formData.password == "") {
 
         Swal.fire(
-            'Incomplete form!',
+            'Formulário incompleto!',
             auth_empty,
             'warning'
         );
@@ -2327,7 +2321,7 @@ $('body').on("submit", "#account", function (e) {
                 }
                 else {
                     Swal.fire(
-                        'Oops!',
+                        'Ops!',
                         auth_error,
                         'warning'
                     );
@@ -2343,13 +2337,13 @@ $('body').on("submit", "#account", function (e) {
 
 $('#quit').click(function () {
     Swal.fire({
-        title: 'Are you sure?',
-        text: "You are about to close the application.",
+        title: 'Você tem certeza?',
+        text: "Você está prestes a fechar o aplicativo.",
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#d33',
         cancelButtonColor: '#3085d6',
-        confirmButtonText: 'Close Application'
+        confirmButtonText: 'Fechar Aplicativo'
     }).then((result) => {
 
         if (result.value) {
