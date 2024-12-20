@@ -458,6 +458,7 @@ if (auth == undefined) {
 
             $("#gross_price").text(settings.symbol + grossTotal.toFixed(2));
             $("#payablePrice").val(grossTotal);
+            $("#payment").val(grossTotal);
         };
 
 
@@ -1088,7 +1089,7 @@ if (auth == undefined) {
         })
 
 
-        $("#confirmPayment").hide();
+        // $("#confirmPayment").hide();
 
         $("#cardInfo").hide();
 
