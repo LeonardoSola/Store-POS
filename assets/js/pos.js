@@ -226,7 +226,7 @@ if (auth == undefined) {
                                         <div class="text-muted m-t-5 text-center">
                                         <div class="name" id="product_name">${item.name}</div> 
                                         <span class="sku">${item.sku}</span>
-                                        <span class="stock">STOCK </span><span class="count">${item.stock == 1 ? item.quantity : 'N/A'}</span></div>
+                                        <span class="stock">ESTOQUE: </span><span class="count">${item.stock == 1 ? item.quantity : 'N/A'}</span></div>
                                         <sp class="text-success text-center"><b data-plugin="counterup">${settings.symbol + item.price}</b> </sp>
                             </div>
                         </div>`;
@@ -669,17 +669,17 @@ if (auth == undefined) {
 
             if (paid != "") {
                 payment = `<tr>
-                        <td>Paid</td>
+                        <td>Pago</td>
                         <td>:</td>
                         <td>${settings.symbol + paid}</td>
                     </tr>
                     <tr>
-                        <td>Change</td>
+                        <td>Troco</td>
                         <td>:</td>
                         <td>${settings.symbol + Math.abs(change).toFixed(2)}</td>
                     </tr>
                     <tr>
-                        <td>Method</td>
+                        <td>Metodo</td>
                         <td>:</td>
                         <td>${type}</td>
                     </tr>`
@@ -739,7 +739,7 @@ if (auth == undefined) {
             <p>
             Pedido No : ${orderNumber} <br>
             Referencia No : ${refNumber == "" ? orderNumber : refNumber} <br>
-            Cliente : ${customer == 0 ? 'Walk in customer' : customer.name} <br>
+            Cliente : ${customer == 0 ? 'Cliente sem cadastro' : customer.name} <br>
             Caixa : ${user.fullname} <br>
             Data : ${date}<br>
             </p>
@@ -944,7 +944,7 @@ if (auth == undefined) {
                 $("#customer option:selected").removeAttr('selected');
 
                 $("#customer option").filter(function () {
-                    return $(this).text() == "Walk in customer";
+                    return $(this).text() == "Cliente sem cadastro";
                 }).prop("selected", true);
 
                 holdOrder = holdOrderList[index]._id;
